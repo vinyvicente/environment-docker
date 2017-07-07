@@ -71,13 +71,13 @@ RUN sed -i -e "s/;listen.mode = 0660/listen.mode = 0750/g" /etc/php/5.6/fpm/pool
 	# create workdir directory
 	mkdir -p /var/www
 
-COPY ../config/nginx/nginx.conf /etc/nginx/sites-available/default.conf
+COPY ./config/nginx/nginx.conf /etc/nginx/sites-available/default.conf
 # Supervisor Config
-COPY ../config/supervisor/supervisord.conf /etc/supervisord.conf
+COPY ./config/supervisor/supervisord.conf /etc/supervisord.conf
 # Start Supervisord
-COPY ../config/cmd.sh /
+COPY ./config/cmd.sh /
 # mount www directory as a workdir
-COPY ../www/ /var/www
+COPY ./www/ /var/www
 
 RUN rm -f /etc/nginx/sites-enabled/default && \
 	ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default && \
