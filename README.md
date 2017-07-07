@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Docker nginx + php7.1 container
 
 Docker container based on `Ubuntu 16.04` version. Using `nginx stable` version with `php 7.1`. This is simple container for my own personally purpose. If you have an idea how to improve it, contact me <donatas@navidonskis.com>.
@@ -74,3 +75,7 @@ post_max_size = 100M
 |     +----------- hour (0 - 23)
 +------------- min (0 - 59)
 ```
+=======
+# environment-docker
+Docker PHP 5.6/7.1 Nginx
+>>>>>>> 84c1ada6616b0171f5c14b3de348144c23a1a671
