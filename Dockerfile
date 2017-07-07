@@ -1,8 +1,7 @@
-FROM ubuntu:16.04
+FROM ubuntu:latest
 
-MAINTAINER Donatas Navidonskis <donatas@navidonskis.com>
+MAINTAINER Vinicius Vicente <vinyvicente@gmail.com>
 
-# Let the container know that there is no tty
 ENV DEBIAN_FRONTEN noninteractive
 
 RUN dpkg-divert --local --rename --add /sbin/initctl && \
@@ -59,13 +58,11 @@ RUN dpkg-divert --local --rename --add /sbin/initctl && \
 	    php7.1-sybase \
 	    php7.1-odbc
 
-# Cleanup
 RUN apt-get remove --purge -y software-properties-common \
 	python-software-properties && \
 	apt-get autoremove -y && \
 	apt-get clean && \
 	apt-get autoclean && \
-	# install composer
 	curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
 
 # Nginx configuration
@@ -88,21 +85,15 @@ RUN sed -i -e"s/worker_processes  1/worker_processes 5/" /etc/nginx/nginx.conf &
 	sed -i -e "/pid\s*=\s*\/run/c\pid = /run/php7.1-fpm.pid" /etc/php/7.1/fpm/php-fpm.conf && \
 	sed -i -e "s/;listen.mode = 0660/listen.mode = 0750/g" /etc/php/7.1/fpm/pool.d/www.conf && \
 
-	# mcrypt configuration
 	phpenmod mcrypt && \
-	# remove default nginx configurations
 	rm -Rf /etc/nginx/conf.d/* && \
 	rm -Rf /etc/nginx/sites-available/default && \
 	mkdir -p /etc/nginx/ssl/ && \
-	# create workdir directory
 	mkdir -p /var/www
 
 COPY ./config/nginx/nginx.conf /etc/nginx/sites-available/default.conf
-# Supervisor Config
 COPY ./config/supervisor/supervisord.conf /etc/supervisord.conf
-# Start Supervisord
 COPY ./config/cmd.sh /
-# mount www directory as a workdir
 COPY ./www/ /var/www
 
 RUN rm -f /etc/nginx/sites-enabled/default && \
@@ -112,7 +103,6 @@ RUN rm -f /etc/nginx/sites-enabled/default && \
 	touch /var/log/cron.log && \
 	touch /etc/cron.d/crontasks
 
-# Expose Ports
 EXPOSE 80
 
 ENTRYPOINT ["/bin/bash", "/cmd.sh"]
